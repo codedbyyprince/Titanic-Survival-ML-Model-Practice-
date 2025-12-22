@@ -1,0 +1,9 @@
+ 0   Survived ---> cat
+ 1   Pclass   ---> cat
+ 2   Sex      ---> cat
+ 3   Age      ---> num
+ 4   SibSp    ---> cat
+ 5   Parch    ---> cat
+ 6   Fare     ---> num
+ 7   Embarked ---> cat
+ 
