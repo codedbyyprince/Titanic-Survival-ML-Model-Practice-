@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic survival predictor </title>
+</head>
+
+<body>
+    <h1>Happy journey </h1>
+
+    <form action="/predict">
+        <label for="Pclass">Ticket Class</label>
+        <select name="Pclass" id="Pclass">
+            <option value="">Select</option>
+            <option value="1">First Class</option>
+            <option value="2">Second Class</option>
+            <option value="3">Third Class</option>
+        </select>
+        <label for="Sex">Sex</label>
+        <select name="Sex" id="Sex">
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <label for="Embarked">Locations</label>
+        <select name="Embarked" id="Embarked">
+            <option value="">Select</option>
+            <option value="S">Southampton</option>
+            <option value="C">Cherbourg</option>
+            <option value="Q">Queenstown</option>
+        </select>
+        <label>Fare</label>
+        <input type="number" name="fare" min="{{ fare_min }}" max="{{ fare_max }}" step="1" required>
+
+        <label>Age</label>
+        <input type="number" name="age" min="{{ age_min }}" max="{{ age_max }}" step="1" required>
+
+        <label>Family Size</label>
+        <input type="number" name="family" min="{{ family_min }}" max="{{ family_max }}" step="1" required>
+        <br>
+        <button type="submit">Predict</button>
+        <h2>Prediction</h2>
+        {% if result is not none %}
+        {{ result }}
+        {% endif %}
+    </form>
+
+
+</body>
+
+</html>
