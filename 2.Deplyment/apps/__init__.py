@@ -18,14 +18,15 @@ def home():
         result=None
     )
 
-@app.route('/predict', methods= ['POST'])
+@app.route('/predict', methods= ['POST','GET'])
 def predict():
-    Age = float(request.form.get('Age', 0))
-    Fare = float(request.form.get('Fare', 0))
-    Family_size = float(request.form.get('Family_size', 0))
+    Age = float(request.form.get('age', 0))
+    Fare = float(request.form.get('fare', 0))
+    Family_size = float(request.form.get('family', 0))
     Embarked = request.form.get('Embarked', '')
     Sex = request.form.get('Sex', '')
     Pclass = request.form.get('Pclass', '')
+
 
     result = predict_survival(Pclass, Sex, Age, Fare, Embarked, Family_size)
     return render_template(
