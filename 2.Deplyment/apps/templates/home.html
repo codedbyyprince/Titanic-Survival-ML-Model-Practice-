@@ -1,53 +1,440 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titanic survival predictor </title>
+    <title>Titanic Survival Predictor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Lato:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%); /* Day Sky */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: background 2s ease;
+        }
+
+        body.doom-mode {
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Dark Night */
+        }
+
+        /* --- NEW MAIN PAGE TITLE (At the top) --- */
+        .page-header {
+            position: absolute;
+            top: 5%;
+            width: 100%;
+            text-align: center;
+            z-index: 4; /* Behind ship if it floats up, but above background */
+        }
+
+        .page-header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3.5rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.4);
+            letter-spacing: 2px;
+        }
+
+        .page-header h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: #555;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+        }
+
+        /* --- THE OCEAN --- */
+        .ocean {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 12vh;
+            background: #006994;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,60 Q300,0 600,60 T1200,60 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.2)"/></svg>') repeat-x;
+            animation: wave 10s linear infinite;
+        }
+        .wave:nth-of-type(2) {
+            bottom: 5px;
+            animation: wave 7s linear infinite reverse;
+            opacity: 0.5;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- THE TITANIC CONTAINER --- */
+        .ship-container {
+            position: relative;
+            z-index: 15;
+            width: 1500px; 
+            height: 900px; 
+            animation: float 3s ease-in-out infinite;
+            transition: transform 3s ease-in;
+            transform-origin: bottom center;
+            margin-bottom: 280px; 
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(0.5deg); }
+        }
+
+        .ship-container.sinking {
+            animation: sink 4s forwards cubic-bezier(0.55, 0.085, 0.68, 0.53);
+        }
+
+        @keyframes sink {
+            0% { transform: rotate(0deg) translateY(0); }
+            30% { transform: rotate(-10deg) translateY(20px); }
+            100% { transform: rotate(-45deg) translateY(600px); opacity: 0; }
+        }
+
+        /* --- SHIP STRUCTURE --- */
+        .ship {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .deck {
+            width: 750px; 
+            height: 70px;
+            background: #fdfdfd;
+            border: 2px solid #999;
+            position: relative;
+            border-bottom: none;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            z-index: 2;
+        }
+        
+        
+
+        .funnel {
+            width: 60px;
+            height: 110px;
+            background: linear-gradient(to right, #ffcc00, #e6b800);
+            border: 2px solid #b38f00;
+            border-bottom: none;
+            transform: skewX(-10deg);
+            position: relative;
+            top: -10px;
+        }
+        
+        .funnel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -2px;
+            width: 104%;
+            height: 25px;
+            background: #222;
+        }
+
+        .smoke {
+            position: absolute;
+            top: -20px;
+            left: 15px;
+            width: 25px;
+            height: 25px;
+            background: rgba(100,100,100,0.5);
+            border-radius: 50%;
+            animation: smoke 3s infinite;
+            opacity: 0;
+        }
+        .funnel:nth-child(2) .smoke { animation-delay: 0.5s; }
+        .funnel:nth-child(3) .smoke { animation-delay: 1s; }
+
+        @keyframes smoke {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-60px) scale(3) translateX(-30px); opacity: 0; }
+        }
+
+        /* --- THE HULL --- */
+        .hull {
+            width: 1200px;
+            height: 300px; 
+            background: linear-gradient(to bottom, #2c3e50 82%, #c0392b 82%);
+            border-radius: 10px 10px 200px 200px; 
+            position: relative;
+            display: flex;
+            align-items: flex-start; /* Keeps form at top */
+            justify-content: center;
+            border-top: 6px solid #f1c40f; 
+            box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
+            z-index: 3;
+            /* Adjusted padding to push form up */
+            padding-top: 25px; 
+        }
+
+        /* --- EMBEDDED FORM STYLING --- */
+        .ship-form {
+            width: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* More breathing room */
+            align-items: center; /* Center the button */
+        }
+
+        .input-row {
+            display: flex;
+            gap: 130px; /* Wider gap */
+            justify-content: center;
+            width: 100%;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            height: 50px;
+            width: 100px; /* Bigger inputs as requested */
+        }
+
+        .input-group label {
+            color: #bdc3c7;
+            font-size: 0.9rem; /* Bigger labels */
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        select, input {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 10px 12px; /* Bigger padding inside inputs */
+            border-radius: 4px; /* Sharper corners */
+            font-family: inherit;
+            font-size: 1.1rem; /* Bigger text inside */
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        select option {
+            background: #2c3e50;
+            color: white;
+        }
+
+        select:focus, input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #f1c40f;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- PROFESSIONAL BUTTON --- */
+        .action-btn {
+            background: linear-gradient(to bottom, #f1c40f, #d4ac0d); 
+            color: #2c3e50; 
+            border: 1px solid #b7950b;
+            padding: 10px 40px; /* Smaller, cleaner padding */
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1rem; /* Smaller, more elegant font size */
+            cursor: pointer;
+            margin-top: 15px;
+            border-radius: 4px; /* Slight radius, not a pill */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+            z-index: 50;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            background: #f39c12;
+            color: white;
+            box-shadow: 0 6px 12px rgba(241, 196, 15, 0.4);
+        }
+
+        /* --- MESSAGES --- */
+        .message-container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease 1s;
+        }
+
+        .message-container.visible {
+            opacity: 1;
+        }
+
+        .message-title {
+            font-family: 'Cinzel', serif;
+            font-size: 6rem;
+            text-transform: uppercase;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+        }
+
+        .message-sub {
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0,0,0,1);
+        }
+
+        .survived-text { color: #2ecc71; text-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
+        .died-text { color: #e74c3c; text-shadow: 0 0 30px rgba(231, 76, 60, 0.8); }
+
+        @media (max-width: 1200px) {
+            .ship-container { transform: scale(0.8); }
+        }
+        @media (max-width: 800px) {
+            .ship-container { transform: scale(0.6); }
+        }
+    </style>
 </head>
-
 <body>
-    <h1>Happy journey </h1>
 
-    <form action="/predict" method="post">
-        <label for="Pclass">Ticket Class</label>
-        <select name="Pclass" id="Pclass">
-            <option value="">Select</option>
-            <option value="1">First Class</option>
-            <option value="2">Second Class</option>
-            <option value="3">Third Class</option>
-        </select>
-        <label for="Sex">Sex</label>
-        <select name="Sex" id="Sex">
-            <option value="">Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <label for="Embarked">Locations</label>
-        <select name="Embarked" id="Embarked">
-            <option value="">Select</option>
-            <option value="S">Southampton</option>
-            <option value="C">Cherbourg</option>
-            <option value="Q">Queenstown</option>
-        </select>
-        <label>Fare</label>
-        <input type="number" name="fare" min="{{ fare_min }}" max="{{ fare_max }}" step="1" required>
+    <div class="page-header">
+        <h1>Welcome to the RMS Titanic</h1>
+        <h2>Survival Prediction System</h2>
+    </div>
 
-        <label>Age</label>
-        <input type="number" name="age" min="{{ age_min }}" max="{{ age_max }}" step="1" required>
+    <div class="message-container" id="messageContainer">
+        <h1 class="message-title" id="mainMessage"></h1>
+        <p class="message-sub" id="subMessage"></p>
+        <button onclick="window.location.href='/'" style="pointer-events: auto; margin-top:30px; padding: 12px 30px; font-size:1.2rem; cursor: pointer; display:none; background: white; border:none; border-radius:5px;" id="retryBtn">Try Again</button>
+    </div>
 
-        <label>Family Size</label>
-        <input type="number" name="family" min="{{ family_min }}" max="{{ family_max }}" step="1" required>
-        <br>
-        <button type="submit">Predict</button>
-        <h2>Prediction</h2>
-        {% if result is not none %}
-        {{ result }}
-        {% endif %}
-    </form>
+    <div class="ship-container" id="shipContainer">
+        <div class="ship">
+            <div class="bridge"></div>
+            <div class="deck">
+                <div class="funnel"><div class="smoke"></div></div>
+                <div class="funnel"><div class="smoke"></div></div>
+                <div class="funnel"><div class="smoke"></div></div>
+                <div class="funnel"></div> 
+            </div>
 
+            <div class="hull">
+                <form action="/predict" method="post" class="ship-form">
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Class</label>
+                            <select name="Pclass" required>
+                                <option value="1">1st Class</option>
+                                <option value="2">2nd Class</option>
+                                <option value="3">3rd Class</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Sex</label>
+                            <select name="Sex" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Age</label>
+                            <input type="number" name="age" placeholder="25" required>
+                        </div>
+                    </div>
 
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Fare (£)</label>
+                            <input type="number" name="fare" placeholder="50" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Family</label>
+                            <input type="number" name="family" placeholder="0" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Port</label>
+                            <select name="Embarked" required>
+                                <option value="S">Southampton</option>
+                                <option value="C">Cherbourg</option>
+                                <option value="Q">Queenstown</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="action-btn">Launch & Predict</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <script>
+        var result = {{ result if result is not none else 'null' }};
+        
+        if (result !== null) {
+            var ship = document.getElementById('shipContainer');
+            var container = document.getElementById('messageContainer');
+            var mainMsg = document.getElementById('mainMessage');
+            var subMsg = document.getElementById('subMessage');
+            var retryBtn = document.getElementById('retryBtn');
+            var body = document.body;
+            var header = document.querySelector('.page-header');
+
+            container.classList.add('visible');
+            retryBtn.style.display = 'inline-block';
+            
+            // Hide the header when result shows so it doesn't clutter
+            header.style.opacity = '0';
+            header.style.transition = 'opacity 1s';
+
+            if (result === 0) {
+                // DIED
+                body.classList.add('doom-mode');
+                ship.classList.remove('ship-container');
+                void ship.offsetWidth; 
+                ship.classList.add('ship-container', 'sinking');
+
+                mainMsg.textContent = "YOU DIED";
+                mainMsg.className = "message-title died-text";
+                subMsg.textContent = "The ocean claims another soul.";
+            } else {
+                // SURVIVED
+                mainMsg.textContent = "CONGRATULATIONS";
+                mainMsg.className = "message-title survived-text";
+                subMsg.textContent = "You survived the voyage!";
+            }
+        }
+    </script>
 </body>
-
 </html>
