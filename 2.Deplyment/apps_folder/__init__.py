@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from apps.routes import predict_survival
+from apps_folder.routes import predict_survival
 
 app = Flask(__name__)
 

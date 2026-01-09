@@ -1,8 +1,12 @@
 import joblib
 import numpy as np
 import pandas as pd
+from huggingface_hub import hf_hub_download
 
-model = joblib.load('/media/prince/5A4E832F4E83034D/TItanic Project/2.Deplyment/Titanic_survival0.pkl')
+MODEL_REPO = "mlwithprince/Titanic-Survival_predictor"
+MODEL_PATH = hf_hub_download(repo_id=MODEL_REPO, filename='Titanic_survival.pkl')
+
+model = joblib.load(MODEL_PATH)
 
 
 def predict_survival(Pclass, Sex, Age, Fare, Embarked, Family_size):

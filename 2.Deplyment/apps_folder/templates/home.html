@@ -16,7 +16,7 @@
         body {
             font-family: 'Lato', sans-serif;
             overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%); /* Day Sky */
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -26,16 +26,53 @@
         }
 
         body.doom-mode {
-            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); /* Dark Night */
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
         }
 
-        /* --- NEW MAIN PAGE TITLE (At the top) --- */
+        /* --- LANDSCAPE WARNING CURTAIN (For Mobile) --- */
+        #rotate-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c3e50;
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f1c40f;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .rotate-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: rotate-phone 2s infinite ease-in-out;
+        }
+
+        @keyframes rotate-phone {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-90deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Show warning ONLY on portrait mobile screens */
+        @media only screen and (max-width: 900px) and (orientation: portrait) {
+            #rotate-warning { display: flex; }
+            .ship-container, .page-header, .ocean { display: none !important; }
+        }
+
+        /* --- PAGE HEADER --- */
         .page-header {
             position: absolute;
             top: 5%;
             width: 100%;
             text-align: center;
-            z-index: 4; /* Behind ship if it floats up, but above background */
+            z-index: 4;
+            transition: opacity 0.5s;
         }
 
         .page-header h1 {
@@ -60,7 +97,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            height: 12vh;
+            height: 16vh;
             background: #006994;
             z-index: 10;
             overflow: hidden;
@@ -76,7 +113,7 @@
             animation: wave 10s linear infinite;
         }
         .wave:nth-of-type(2) {
-            bottom: 5px;
+            bottom: 10px;
             animation: wave 7s linear infinite reverse;
             opacity: 0.5;
         }
@@ -86,16 +123,16 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* --- THE TITANIC CONTAINER --- */
+        /* --- THE TITANIC CONTAINER (Restored to 900px) --- */
         .ship-container {
             position: relative;
-            z-index: 15;
-            width: 1500px; 
-            height: 900px; 
+            z-index: 5;
+            width: 900px; 
+            height: 650px; 
             animation: float 3s ease-in-out infinite;
             transition: transform 3s ease-in;
             transform-origin: bottom center;
-            margin-bottom: 280px; 
+            margin-bottom: 100px; 
         }
 
         @keyframes float {
@@ -125,6 +162,7 @@
             align-items: center;
         }
 
+        /* Deck (Restored) */
         .deck {
             width: 750px; 
             height: 70px;
@@ -138,8 +176,20 @@
             z-index: 2;
         }
         
-        
+        /* Bridge (Restored) */
+        .bridge {
+            width: 500px;
+            height: 50px;
+            background: #fdfdfd;
+            position: absolute;
+            top: -48px;
+            left: 120px;
+            border: 2px solid #999;
+            border-bottom: none;
+            z-index: 1;
+        }
 
+        /* Funnels */
         .funnel {
             width: 60px;
             height: 110px;
@@ -161,6 +211,7 @@
             background: #222;
         }
 
+        /* Smoke */
         .smoke {
             position: absolute;
             top: -20px;
@@ -180,21 +231,20 @@
             100% { transform: translateY(-60px) scale(3) translateX(-30px); opacity: 0; }
         }
 
-        /* --- THE HULL --- */
+        /* --- THE HULL (Restored) --- */
         .hull {
-            width: 1200px;
-            height: 300px; 
+            width: 1000px;
+            height: 260px; 
             background: linear-gradient(to bottom, #2c3e50 82%, #c0392b 82%);
-            border-radius: 10px 10px 200px 200px; 
+            border-radius: 3px 3px 200px 200px; 
             position: relative;
             display: flex;
-            align-items: flex-start; /* Keeps form at top */
+            align-items: flex-start;
             justify-content: center;
             border-top: 6px solid #f1c40f; 
             box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
             z-index: 3;
-            /* Adjusted padding to push form up */
-            padding-top: 25px; 
+            padding-top: 20px;
         }
 
         /* --- EMBEDDED FORM STYLING --- */
@@ -202,28 +252,26 @@
             width: 85%;
             display: flex;
             flex-direction: column;
-            gap: 20px; /* More breathing room */
-            align-items: center; /* Center the button */
+            gap: 12px;
+            padding: 10px;
         }
 
         .input-row {
             display: flex;
-            gap: 130px; /* Wider gap */
+            gap: 20px;
             justify-content: center;
-            width: 100%;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            height: 50px;
-            width: 100px; /* Bigger inputs as requested */
+            width: 160px;
         }
 
         .input-group label {
             color: #bdc3c7;
-            font-size: 0.9rem; /* Bigger labels */
-            margin-bottom: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
             text-transform: uppercase;
             font-weight: bold;
             text-shadow: 1px 1px 2px black;
@@ -233,10 +281,10 @@
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
-            padding: 10px 12px; /* Bigger padding inside inputs */
-            border-radius: 4px; /* Sharper corners */
+            padding: 8px 10px;
+            border-radius: 6px;
             font-family: inherit;
-            font-size: 1.1rem; /* Bigger text inside */
+            font-size: 1rem;
             outline: none;
             transition: all 0.3s;
         }
@@ -252,30 +300,32 @@
             box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
         }
 
-        /* --- PROFESSIONAL BUTTON --- */
+        /* --- ACTION BUTTON --- */
         .action-btn {
-            background: linear-gradient(to bottom, #f1c40f, #d4ac0d); 
-            color: #2c3e50; 
-            border: 1px solid #b7950b;
-            padding: 10px 40px; /* Smaller, cleaner padding */
+            background: linear-gradient(to bottom, #f1c40f, #f39c12);
+            color: #2c3e50;
+            border: 2px solid #b7950b;
+            padding: 12px 30px;
             font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1rem; /* Smaller, more elegant font size */
+            font-weight: 900;
+            font-size: 1.1rem;
             cursor: pointer;
             margin-top: 15px;
-            border-radius: 4px; /* Slight radius, not a pill */
+            width: 300px;
+            align-self: center;
+            border-radius: 50px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.6);
             transition: all 0.2s;
-            z-index: 50;
+            z-index: 50; 
         }
 
         .action-btn:hover {
-            transform: translateY(-2px);
-            background: #f39c12;
+            transform: scale(1.05);
+            background: linear-gradient(to bottom, #f39c12, #d35400);
             color: white;
-            box-shadow: 0 6px 12px rgba(241, 196, 15, 0.4);
+            box-shadow: 0 0 25px rgba(241, 196, 15, 0.8);
         }
 
         /* --- MESSAGES --- */
@@ -313,15 +363,30 @@
         .survived-text { color: #2ecc71; text-shadow: 0 0 30px rgba(46, 204, 113, 0.8); }
         .died-text { color: #e74c3c; text-shadow: 0 0 30px rgba(231, 76, 60, 0.8); }
 
+        /* --- RESPONSIVE SCALING (Fixed for 900px base) --- */
         @media (max-width: 1200px) {
             .ship-container { transform: scale(0.8); }
         }
-        @media (max-width: 800px) {
-            .ship-container { transform: scale(0.6); }
+
+        /* Mobile Landscape Fix: Shrink the 900px ship to fit phone width */
+        @media (max-width: 950px) and (orientation: landscape) {
+            .ship-container {
+                transform: scale(0.55); /* Perfect size for mobile landscape */
+                margin-bottom: 30px; 
+            }
+            .page-header { top: 2%; }
+            .page-header h1 { font-size: 1.8rem; }
+            .page-header h2 { font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
+
+    <div id="rotate-warning">
+        <div class="rotate-icon">📱</div>
+        <h1 style="font-family: 'Cinzel', serif; font-size: 2rem; margin-bottom: 10px;">Captain's Orders!</h1>
+        <p style="font-family: 'Lato'; font-size: 1.2rem;">Please rotate your device to landscape to board the ship.</p>
+    </div>
 
     <div class="page-header">
         <h1>Welcome to the RMS Titanic</h1>
@@ -414,9 +479,9 @@
             container.classList.add('visible');
             retryBtn.style.display = 'inline-block';
             
-            // Hide the header when result shows so it doesn't clutter
-            header.style.opacity = '0';
-            header.style.transition = 'opacity 1s';
+            if (header) {
+                header.style.opacity = '0';
+            }
 
             if (result === 0) {
                 // DIED
